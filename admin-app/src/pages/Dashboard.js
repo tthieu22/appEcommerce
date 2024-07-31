@@ -1,6 +1,6 @@
 import React from "react";
 import { BsGraphUpArrow } from "react-icons/bs";
-import { Column } from "@ant-design/charts";
+// import { Column } from "@ant-design/charts";
 import { Table } from "antd";
 
 const Dashboard = () => {
@@ -32,43 +32,43 @@ const Dashboard = () => {
     });
   }
   // Dữ liệu mẫu cho biểu đồ
-  const data = [
-    { type: "January", scales: 120000 },
-    { type: "February", scales: 90000 },
-    { type: "March", scales: 140000 },
-    { type: "April", scales: 80000 },
-    { type: "May", scales: 150000 },
-    { type: "June", scales: 170000 },
-    { type: "July", scales: 110000 },
-    { type: "August", scales: 130000 },
-    { type: "September", scales: 90000 },
-    { type: "October", scales: 140000 },
-    { type: "November", scales: 160000 },
-    { type: "December", scales: 180000 },
-  ];
+  // const data = [
+  //   { type: "January", scales: 120000 },
+  //   { type: "February", scales: 90000 },
+  //   { type: "March", scales: 140000 },
+  //   { type: "April", scales: 80000 },
+  //   { type: "May", scales: 150000 },
+  //   { type: "June", scales: 170000 },
+  //   { type: "July", scales: 110000 },
+  //   { type: "August", scales: 130000 },
+  //   { type: "September", scales: 90000 },
+  //   { type: "October", scales: 140000 },
+  //   { type: "November", scales: 160000 },
+  //   { type: "December", scales: 180000 },
+  // ];
 
-  // Cấu hình cho biểu đồ cột
-  const config = {
-    data,
-    xField: "type",
-    yField: "scales",
-    // seriesField: "type",
-    // isPercent: true,
-    // isStack: true,
-    meta: {
-      y: {
-        min: 0,
-        max: 1,
-      },
-    },
-    label: {
-      // position: "center",
-      content: (item) => `${(item.y * 100).toFixed(2)}%`,
-      style: { fill: "#000" },
-    },
-    // colorField: "type",
-    color: "#19CDD7", // ["#19CDD7", "#DDB27C"],
-  };
+  // // Cấu hình cho biểu đồ cột
+  // const config = {
+  //   data,
+  //   xField: "type",
+  //   yField: "scales",
+  //   // seriesField: "type",
+  //   // isPercent: true,
+  //   // isStack: true,
+  //   meta: {
+  //     y: {
+  //       min: 0,
+  //       max: 1,
+  //     },
+  //   },
+  //   label: {
+  //     // position: "center",
+  //     content: (item) => `${(item.y * 100).toFixed(2)}%`,
+  //     style: { fill: "#000" },
+  //   },
+  //   // colorField: "type",
+  //   color: "#19CDD7", // ["#19CDD7", "#DDB27C"],
+  // };
 
   return (
     <div>
@@ -116,9 +116,7 @@ const Dashboard = () => {
       </div>
       <div className="mt-4">
         <h3 className="mt-4">Income Statistics</h3>
-        <div>
-          <Column {...config} />
-        </div>
+        <div>{/* <Column {...config} /> */}</div>
       </div>
       <div className="mt-4">
         <h3 className="mb-4">Recent Orders</h3>

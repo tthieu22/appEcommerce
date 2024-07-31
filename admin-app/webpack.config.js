@@ -1,22 +1,19 @@
-const path = require("path");
-
 module.exports = {
-  devtool: false,
-  entry: "./src/index.js",
-  output: {
-    filename: "bundle.js",
-    path: path.resolve(__dirname, "dist"),
-  },
+  // ... other configurations
   module: {
     rules: [
-      // Các quy tắc khác của Webpack...
+      // ... other rules
+      {
+        enforce: "pre",
+        test: /\.js$/,
+        loader: "source-map-loader",
+        exclude: [
+          // Paths to modules to ignore source map warnings
+          /node_modules\/react-widgets\//,
+        ],
+      },
     ],
   },
-  ignoreWarnings: [
-    {
-      module: /node_modules\/@antv\/util/,
-      message: /Failed to parse source map/,
-    },
-  ],
-  // Các cấu hình khác của Webpack...
+  // This suppresses all source map warnings
+  ignoreWarnings: [/Failed to parse source map/],
 };

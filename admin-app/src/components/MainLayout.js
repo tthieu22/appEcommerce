@@ -14,7 +14,8 @@ import { Link, Outlet } from "react-router-dom";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const { Header, Sider, Content } = Layout;
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -180,7 +181,7 @@ const MainLayout = () => {
                 <p className="m-0">tthieu.dev.02@gmail.com</p>
               </div>
             </div>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+            <ul className="dropdown-menu" aria-labelledby="dropdownMenu2">
               <li>
                 <Link to={"logout"} className="dropdown-item" type="button">
                   View Profile
@@ -203,6 +204,18 @@ const MainLayout = () => {
             borderRadius: borderRadiusLG,
           }}
         >
+          <ToastContainer
+            position="top-right"
+            autoClose={1000}
+            hideProgressBar={false}
+            newestOnTop={true}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
           <Outlet />
         </Content>
       </Layout>

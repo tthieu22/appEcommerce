@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 :root {
   --color-212529: #212529;
   --color-ffd333: #ffd333;

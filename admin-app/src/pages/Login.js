@@ -6,15 +6,16 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../features/auth/authSlice";
 
+let userSchema = Yup.object({
+  email: Yup.string()
+    .email("Email should be valid")
+    .required("Email is required"),
+  password: Yup.string().required("Password is required"),
+});
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  let userSchema = Yup.object({
-    email: Yup.string()
-      .email("Email should be valid")
-      .required("Email is required"),
-    password: Yup.string().required("Password is required"),
-  });
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -23,7 +24,7 @@ const Login = () => {
     validationSchema: userSchema,
     onSubmit: (values) => {
       dispatch(login(values));
-      alert(JSON.stringify(values, null, 2));
+      // alert(JSON.stringify(values, null, 2));
     },
   });
 
@@ -35,9 +36,9 @@ const Login = () => {
     if (!user == null || isSuccess) {
       navigate("admin");
     } else {
-      alert("not");
+      navigate("");
     }
-  }, [user, isLoading, isError, isSuccess, message]);
+  }, [navigate, user, isLoading, isError, isSuccess, message]);
   return (
     <div
       className="d-flex align-items-center"
@@ -52,6 +53,9 @@ const Login = () => {
       >
         <h4 className="text-center title">Sign In</h4>
         <p className="text-center">Log in your account to continue</p>
+        <div className="error text-center">
+          {message.message === "Rejected" ? "You are not an Admin" : ""}
+        </div>
         <form action="" onSubmit={formik.handleSubmit}>
           <CustomInput
             name="email"

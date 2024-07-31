@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Table } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import Link from "antd/es/typography/Link";
+import { MdDeleteForever } from "react-icons/md";
+import { getEnquiries } from "../features/enquiries/enquiriesClice";
 
 const columns = [
   {
@@ -7,34 +11,68 @@ const columns = [
     dataIndex: "key",
   },
   {
-    title: "Status",
+    title: "Name",
     dataIndex: "name",
   },
   {
-    title: "Product",
-    dataIndex: "product",
+    title: "Email",
+    dataIndex: "email",
+  },
+  {
+    title: "Mobile",
+    dataIndex: "mobile",
+  },
+  {
+    title: "Comment",
+    dataIndex: "comment",
   },
   {
     title: "Status",
     dataIndex: "status",
   },
+  {
+    title: "Action",
+    dataIndex: "action",
+  },
 ];
-const data1 = [];
-for (let i = 0; i < 46; i++) {
-  data1.push({
-    key: i,
-    name: `Edward King ${i}`,
-    product: 32,
-    status: `London, Park Lane no. ${i}`,
-  });
-}
 const Enquiries = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getEnquiries());
+  }, [dispatch]);
+  const enquiriesstate = useSelector((state) => state.enquiry.enquiries);
+  const data = [];
+  for (let i = 0; i < enquiriesstate.length; i++) {
+    data.push({
+      key: i,
+      name: enquiriesstate[i].name,
+      email: enquiriesstate[i].email,
+      mobile: enquiriesstate[i].mobile,
+      comment: enquiriesstate[i].comment,
+      status: (
+        <>
+          <select name="" id="" className="form-control form-select">
+            <option>Set status</option>
+            <option>Submited</option>
+          </select>
+        </>
+      ),
+      action: (
+        <div className="d-flex gap-3">
+          <Link to="/admin" className="text-dark">
+            <MdDeleteForever className="fs-4" />
+          </Link>
+        </div>
+      ),
+    });
+  }
   return (
     <div>
       <div>
         <h3 className="mb-4 title">Enquirires</h3>
         <div>
-          <Table columns={columns} dataSource={data1} />;
+          <Table columns={columns} dataSource={data} />;
         </div>
       </div>
     </div>

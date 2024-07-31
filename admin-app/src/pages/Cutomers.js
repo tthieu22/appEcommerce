@@ -1,42 +1,54 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Table } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { getUSers } from "../features/customer/customerSlice";
 
 const columns = [
   {
-    title: "No",
+    title: "STT",
     dataIndex: "key",
   },
   {
-    title: "Status",
+    title: "Name",
     dataIndex: "name",
+    defaultSortOrder: "descend",
+    sorter: (a, b) => a.name.length - b.name.length,
   },
   {
-    title: "Product",
-    dataIndex: "product",
+    title: "Email",
+    dataIndex: "email",
   },
   {
-    title: "Status",
-    dataIndex: "status",
+    title: "Mobile",
+    dataIndex: "mobile",
   },
 ];
-const data1 = [];
-for (let i = 0; i < 46; i++) {
-  data1.push({
-    key: i,
-    name: `Edward King ${i}`,
-    product: 32,
-    status: `London, Park Lane no. ${i}`,
-  });
-}
+
 const Customers = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUSers());
+  }, [dispatch]); // Thêm dispatch vào dependency array
+
+  const customerstate = useSelector((state) => state.customer.customers);
+
+  // Kiểm tra dữ liệu và xử lý
+  const data = customerstate
+    ? customerstate
+        .filter((customer) => customer.role !== "admin")
+        .map((customer, index) => ({
+          key: customer.id || index, // Sử dụng customer.id nếu có, hoặc index nếu không có id
+          name: `${customer.firstname} ${customer.lastname}`,
+          email: customer.email,
+          mobile: customer.mobile,
+        }))
+    : [];
+
   return (
     <div>
-      <div>
-        <h3 className="mb-4 title">Customers</h3>
-        <div>
-          <Table columns={columns} dataSource={data1} />;
-        </div>
-      </div>
+      <h3 className="mb-4 title">Customers</h3>
+      <Table columns={columns} dataSource={data} />
     </div>
   );
 };

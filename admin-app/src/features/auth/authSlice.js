@@ -1,16 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "./authService";
-const userDefaultState = {
-  _id: null,
-  firstname: null,
-  lastname: null,
-  email: null,
-  mobile: null,
-  token: null,
-};
+
+const getUserfromLocalStorage = localStorage.getItem("user")
+  ? JSON.parse(localStorage.getItem("user"))
+  : null;
 
 const initialState = {
-  user: userDefaultState,
+  user: getUserfromLocalStorage,
+  orders: [],
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -28,12 +25,21 @@ export const login = createAsyncThunk(
   }
 );
 
+export const getOrders = createAsyncThunk(
+  "order/get-orders",
+  async (_, thunkAPI) => {
+    try {
+      return await authService.getOrders();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    // Có thể thêm các reducer khác nếu cần
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
@@ -45,16 +51,36 @@ export const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.user = action.payload; // Đảm bảo payload có cấu trúc đúng
+        state.user = action.payload;
         state.message = "Login successful";
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
-        state.user = userDefaultState;
-        state.message = action.payload || "An error occurred"; // Hiển thị thông điệp lỗi
+        state.user = getUserfromLocalStorage;
+        state.message = action.payload || "An error occurred";
+      })
+      .addCase(getOrders.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(getOrders.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.orders = action.payload; // Đảm bảo payload có cấu trúc đúng
+        state.message = "Fetched orders successfully";
+      })
+      .addCase(getOrders.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.orders = [];
+        state.message = action.payload || "Failed to fetch orders";
       });
   },
 });
+
 export default authSlice.reducer;
