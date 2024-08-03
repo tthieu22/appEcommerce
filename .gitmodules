@@ -1,7 +1,7 @@
 [submodule "digitic-be"]
     path = digitic-be
-    url = https://github.com/tthieu22/digitic-be
+    url = https://github.com/tthieu22/digitic-be.git
 
 [submodule "digitic-fe"]
     path = digitic-fe
-    url = https://github.com/tthieu22/digitic-fe
+    url = https://github.com/tthieu22/digitic-fe.git
