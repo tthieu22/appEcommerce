@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { createCategory } from "../features/category/categoryClice";
+import { createCategory, resetState } from "../features/category/categoryClice";
 
 let schema = Yup.object().shape({
   title: Yup.string().required("Category name is required"),
@@ -27,6 +27,7 @@ const Addcat = () => {
       formik.resetForm();
       setTimeout(() => {
         navigate("/admin/list-category");
+        dispatch(resetState());
       }, 2000);
     },
   });
@@ -51,7 +52,7 @@ const Addcat = () => {
           onChange={formik.handleChange("title")}
           onBlur={formik.handleBlur("title")}
           value={formik.values.title}
-          id="brand"
+          id="cat"
         />
         <div className="error">
           {formik.touched.title && formik.errors.title}

@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import brandService from "./brandServer";
 export const getBrands = createAsyncThunk(
   "brand/get-brands",
@@ -21,6 +21,42 @@ export const createBrand = createAsyncThunk(
     }
   }
 );
+
+export const getaBrand = createAsyncThunk(
+  "brand/get-a-brand",
+  async (id, thunkAPI) => {
+    try {
+      return await brandService.getaBrand(id);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const updateBrand = createAsyncThunk(
+  "product/update-product",
+  async (id, brandData, thunkAPI) => {
+    try {
+      return await brandService.updateBrand(id, brandData);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message || error);
+    }
+  }
+);
+
+export const deleteaBrand = createAsyncThunk(
+  "brand/delete-brand",
+  async (id, thunkAPI) => {
+    try {
+      return await brandService.deleteaBrand(id);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const resetState = createAction("Reset_all");
+
 const initialState = {
   brands: [],
   createBrands: null,
@@ -64,7 +100,53 @@ export const brandSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
         state.message = action.payload || "Failed to fetch users";
-      });
+      })
+      .addCase(getaBrand.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getaBrand.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.brandName = action.payload.title;
+      })
+      .addCase(getaBrand.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload || "Failed to fetch users";
+      })
+      .addCase(updateBrand.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateBrand.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.updatebrand = action.payload;
+      })
+      .addCase(updateBrand.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload || "Failed to fetch users";
+      })
+      .addCase(deleteaBrand.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteaBrand.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.deletebrand = action.payload;
+      })
+      .addCase(deleteaBrand.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload || "Failed to fetch users";
+      })
+      .addCase(resetState, () => initialState);
   },
 });
 export default brandSlice.reducer;

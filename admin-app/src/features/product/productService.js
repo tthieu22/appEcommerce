@@ -5,7 +5,7 @@ import { config } from "../../utils/axiosconfig";
 // Function to get users
 const getProducts = async () => {
   try {
-    const response = await axios.get(`${base_url}product`);
+    const response = await axios.get(`${base_url}product`, config);
     return response.data;
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -14,7 +14,7 @@ const getProducts = async () => {
 };
 const createProduct = async (product) => {
   try {
-    const response = await axios.post(`${base_url}product`,product,config);
+    const response = await axios.post(`${base_url}product`, product, config);
     return response.data;
   } catch (error) {
     console.error("Error fetching users:", error);

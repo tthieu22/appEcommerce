@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import colorService from "./colorServie";
 export const getColors = createAsyncThunk(
   "color/get-colors",
@@ -21,6 +21,8 @@ export const createColor = createAsyncThunk(
     }
   }
 );
+export const resetState = createAction("Reset_all");
+
 const initialState = {
   colors: [],
   createcolor: null,
@@ -64,7 +66,8 @@ export const colorSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
         state.message = action.payload || "Failed to fetch users";
-      });
+      })
+      .addCase(resetState, () => initialState);
   },
 });
 export default colorSlice.reducer;

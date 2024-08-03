@@ -11,10 +11,9 @@ import { getColors } from "../features/color/colorClice";
 import Dropzone from "react-dropzone";
 import { Select } from "antd";
 import { deleteImg, uploadImg } from "../features/upload/uploadClice";
-import { createProduct } from "../features/product/productClice";
+import { createProduct, resetState } from "../features/product/productClice";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 // Schema validation with Yup
 const schema = Yup.object().shape({
@@ -84,6 +83,12 @@ const AddProduct = () => {
       }));
       values.color = colors.map((c) => c._id);
       dispatch(createProduct(values));
+      formik.resetForm();
+      setColors([]);
+      setTimeout(() => {
+        navigate("/admin/product-list");
+        dispatch(resetState());
+      }, 3000);
     },
   });
 
@@ -103,9 +108,6 @@ const AddProduct = () => {
 
   useEffect(() => {
     if (isSuccess && createdProduct) {
-      formik.resetForm();
-      setColors([]);
-      setTimeout(() => navigate("/admin/product-list"), 3000);
       toast.success("🦄 Product Added Successfully!");
     }
     if (isError) {
@@ -136,7 +138,6 @@ const AddProduct = () => {
 
   return (
     <div>
-      <ToastContainer />
       <h3 className="mb-4 title">Add Product</h3>
       <form onSubmit={formik.handleSubmit}>
         <CustomInput

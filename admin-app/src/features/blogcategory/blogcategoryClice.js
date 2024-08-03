@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import blogCategoryService from "./blogcategoryService";
 
 export const getBlogCategorys = createAsyncThunk(
@@ -11,8 +11,22 @@ export const getBlogCategorys = createAsyncThunk(
     }
   }
 );
+
+export const createBlogCategory = createAsyncThunk(
+  "blog-category/create-blog-category",
+  async (catblogData, thunkAPI) => {
+    try {
+      return await blogCategoryService.createBlogCategory(catblogData);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message || error);
+    }
+  }
+);
+export const resetState = createAction("Reset_all");
+
 const initialState = {
   blogcategories: [],
+  createblogcategory: null,
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -26,8 +40,6 @@ export const blogCategorySlice = createSlice({
     builder
       .addCase(getBlogCategorys.pending, (state) => {
         state.isLoading = true;
-        state.isError = false;
-        state.message = "";
       })
       .addCase(getBlogCategorys.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -40,7 +52,23 @@ export const blogCategorySlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
         state.message = action.payload || "Failed to fetch users";
-      });
+      })
+      .addCase(createBlogCategory.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createBlogCategory.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.createblogcategory = action.payload;
+      })
+      .addCase(createBlogCategory.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload || "Failed to fetch users";
+      })
+      .addCase(resetState, () => initialState);;
   },
 });
 export default blogCategorySlice.reducer;
