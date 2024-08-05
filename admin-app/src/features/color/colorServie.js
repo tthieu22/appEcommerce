@@ -21,9 +21,45 @@ const createColor = async (colorData) => {
     throw error.response?.data || error;
   }
 };
+
+const getaColor = async (id) => {
+  try {
+    const response = await axios.get(`${base_url}color/${id}`, config);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    throw error.response?.data || error;
+  }
+};
+const updateColor = async (color) => {
+  try {
+    const response = await axios.put(
+      `${base_url}color/${color.id}`,
+      { title: color.colorData.title },
+      config
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    throw error.response?.data || error;
+  }
+};
+
+const deleteaColor = async (id) => {
+  try {
+    const response = await axios.delete(`${base_url}color/${id}`, config);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    throw error.response?.data || error;
+  }
+};
 const colorService = {
   getColor,
   createColor,
+  getaColor,
+  updateColor,
+  deleteaColor,
 };
 
 export default colorService;

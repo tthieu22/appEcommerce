@@ -43,7 +43,7 @@ const Addbrand = () => {
         formik.resetForm();
         navigate("/admin/list-brand");
         dispatch(resetState());
-      }, 10);
+      }, 100);
     },
   });
   useEffect(() => {
@@ -74,7 +74,7 @@ const Addbrand = () => {
       <form action="" onSubmit={formik.handleSubmit}>
         <CustomInput
           type="text"
-          label="Enter blog category title"
+          label="Enter brand title"
           name="title"
           onChange={formik.handleChange("title")}
           onBlur={formik.handleBlur("title")}

@@ -3,9 +3,14 @@ import CustomInput from "../components/CustomInput";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { createCategory, resetState } from "../features/category/categoryClice";
+import {
+  createCategory,
+  getaCategory,
+  resetState,
+  updateCategory,
+} from "../features/category/categoryClice";
 
 let schema = Yup.object().shape({
   title: Yup.string().required("Category name is required"),
@@ -14,36 +19,60 @@ let schema = Yup.object().shape({
 const Addcat = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const getCategoryId = location.pathname.split("/")[3];
+
   const newCategory = useSelector((state) => state.category);
-  const { isSuccess, isError, createcategory } = newCategory || {};
+  const { isSuccess, isError, createcategory, categoryName, updatecategory } =
+    newCategory || {};
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      title: "",
+      title: categoryName || "",
     },
     validationSchema: schema,
     onSubmit: (values) => {
-      dispatch(createCategory(values));
-      formik.resetForm();
+      if (getCategoryId !== undefined) {
+        const data = { id: getCategoryId, categoryData: values };
+        dispatch(updateCategory(data));
+      } else {
+        dispatch(createCategory(values));
+      }
       setTimeout(() => {
+        formik.resetForm();
         navigate("/admin/list-category");
         dispatch(resetState());
-      }, 2000);
+      }, 100);
     },
   });
 
   useEffect(() => {
-    if (isSuccess && createcategory) {
-      toast.success("Category Added Successfully!");
+    if (getCategoryId) {
+      dispatch(getaCategory(getCategoryId));
+    } else {
+      dispatch(resetState());
+    }
+  }, [dispatch, getCategoryId]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      if (createcategory) {
+        toast.success("Category Added Successfully!");
+      } else if (updatecategory) {
+        toast.success("Category Updated Successfully!");
+      }
     }
     if (isError) {
       toast.error("Something went wrong!");
     }
-  }, [isSuccess, isError, createcategory]);
+  }, [isSuccess, isError, createcategory, updatecategory]);
 
   return (
     <div>
-      <h3 className="mb-4 title">Add Category</h3>
+      <h3 className="mb-4 title">
+        {getCategoryId !== undefined ? "Edit" : "Add"} category
+      </h3>
       <form action="" onSubmit={formik.handleSubmit}>
         <CustomInput
           type="text"
@@ -61,7 +90,7 @@ const Addcat = () => {
           type="submit"
           className="btn btn-success border-0 rounded-3 my-5"
         >
-          Add category
+          {getCategoryId ? "Update" : "Add"} category
         </button>
       </form>
     </div>
